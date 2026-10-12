@@ -25,58 +25,55 @@ const jsonLd = {
 ---
 
 <Base title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
-  <!-- SEO: single H1 -->
   <h1>Free Construction Calculators</h1>
 
-  <!-- Homepage calculator: simplified version, results appear after submit -->
   <FenceCalculator />
 
-  <!-- SEO: introductory paragraph (static HTML) -->
   <section class="intro">
     <p>
       easycalc is a free collection of construction calculators built for homeowners doing DIY projects and small contractors preparing material lists. Enter a few measurements and get quantities for posts, panels, concrete, and other materials, plus a rough cost range. No account is required. Results are estimates based on common industry practices and should be verified against local conditions and supplier pricing.
     </p>
   </section>
 
-  <!-- SEO: category sections with H2 and H3 links -->
-  <section>
-    <h2>Fence & Outdoor</h2>
-    <p>Calculate posts, panels, pickets, and concrete for wood, vinyl, and chain-link fences. Useful when planning a new perimeter or replacing sections of an existing fence.</p>
-    <h3><a href="/fence-calculator/">Fence Calculator</a></h3>
-    <h3>Gravel Calculator</h3>
-    <h3>Mulch Calculator</h3>
-  </section>
+  <div class="grid">
+    <section class="card">
+      <h2>Fence & Outdoor</h2>
+      <p>Calculate posts, panels, pickets, and concrete for wood, vinyl, and chain-link fences. Useful when planning a new perimeter or replacing sections of an existing fence.</p>
+      <h3><a href="/fence-calculator/">Fence Calculator</a></h3>
+      <h3>Gravel Calculator</h3>
+      <h3>Mulch Calculator</h3>
+    </section>
 
-  <section>
-    <h2>Concrete & Masonry</h2>
-    <p>Estimate cubic yards, bag counts, and footing volumes for slabs, footings, and block walls. Helps avoid under- or over-ordering ready-mix or bagged concrete.</p>
-    <h3>Concrete Calculator</h3>
-    <h3>Concrete Block Calculator</h3>
-    <h3>Concrete Footing Calculator</h3>
-  </section>
+    <section class="card">
+      <h2>Concrete & Masonry</h2>
+      <p>Estimate cubic yards, bag counts, and footing volumes for slabs, footings, and block walls. Helps avoid under- or over-ordering ready-mix or bagged concrete.</p>
+      <h3>Concrete Calculator</h3>
+      <h3>Concrete Block Calculator</h3>
+      <h3>Concrete Footing Calculator</h3>
+    </section>
 
-  <section>
-    <h2>Roofing & Framing</h2>
-    <p>Figure roofing squares, rafter lengths, and related framing materials from roof dimensions and pitch. Supports planning for replacement or new construction.</p>
-    <h3>Roofing Calculator</h3>
-    <h3>Rafter Calculator</h3>
-  </section>
+    <section class="card">
+      <h2>Roofing & Framing</h2>
+      <p>Figure roofing squares, rafter lengths, and related framing materials from roof dimensions and pitch. Supports planning for replacement or new construction.</p>
+      <h3>Roofing Calculator</h3>
+      <h3>Rafter Calculator</h3>
+    </section>
 
-  <section>
-    <h2>Flooring, Tile & Drywall</h2>
-    <p>Calculate square footage, waste factors, and sheet or tile counts for floors, walls, and ceilings. Accounts for typical waste so you order enough material the first time.</p>
-    <h3>Tile Calculator</h3>
-    <h3>Flooring Calculator</h3>
-    <h3>Drywall Calculator</h3>
-  </section>
+    <section class="card">
+      <h2>Flooring, Tile & Drywall</h2>
+      <p>Calculate square footage, waste factors, and sheet or tile counts for floors, walls, and ceilings. Accounts for typical waste so you order enough material the first time.</p>
+      <h3>Tile Calculator</h3>
+      <h3>Flooring Calculator</h3>
+      <h3>Drywall Calculator</h3>
+    </section>
 
-  <section>
-    <h2>Paint & Finishing</h2>
-    <p>Estimate gallons of paint from wall and ceiling areas, including doors and windows. Useful for both interior and exterior projects.</p>
-    <h3>Paint Calculator</h3>
-  </section>
+    <section class="card">
+      <h2>Paint & Finishing</h2>
+      <p>Estimate gallons of paint from wall and ceiling areas, including doors and windows. Useful for both interior and exterior projects.</p>
+      <h3>Paint Calculator</h3>
+    </section>
+  </div>
 
-  <!-- SEO: why use section -->
   <section>
     <h2>Why use easycalc</h2>
     <ul>
@@ -87,7 +84,6 @@ const jsonLd = {
     </ul>
   </section>
 
-  <!-- SEO: FAQ with H3 questions and paragraph answers (no JS accordion) -->
   <section>
     <h2>FAQ</h2>
 
