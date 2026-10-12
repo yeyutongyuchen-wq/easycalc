@@ -1,0 +1,62 @@
+---
+// Base layout: shared <head>, header, footer, breadcrumbs slot
+// SEO elements live here so every page inherits them correctly
+
+const {
+  title,
+  description,
+  canonical,
+  jsonLd = null,
+} = Astro.props;
+
+const siteName = "easycalc";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO: unique title -->
+    <title>{title}</title>
+    <!-- SEO: unique meta description (140-160 chars) -->
+    <meta name="description" content={description} />
+    <!-- SEO: canonical URL -->
+    <link rel="canonical" href={canonical} />
+    <!-- SEO: Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <!-- SEO: Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <!-- JSON-LD slot -->
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <!-- SEO: site header with navigation -->
+    <header>
+      <div class="container header-inner">
+        <a href="/" class="site-name">{siteName}</a>
+        <p class="slogan">Free construction calculators</p>
+        <nav aria-label="Main">
+          <a href="/fence-calculator/">Fence Calculator</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- SEO: minimal footer, no unbuilt pages -->
+    <footer>
+      <div class="container">
+        <p>© {new Date().getFullYear()} easycalc. Free construction calculators for homeowners and contractors.</p>
+      </div>
+    </footer>
+  </body>
+</html>
