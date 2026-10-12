@@ -1,0 +1,142 @@
+/* Mobile-first global styles. No external fonts or UI libraries. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: #222;
+  background: #fff;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+header {
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.site-name {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.slogan {
+  margin: 0;
+  flex: 1;
+  color: #555;
+}
+
+nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #0066cc;
+}
+
+main {
+  padding: 1.5rem 0;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+.calculator {
+  background: #f7f7f7;
+  padding: 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+}
+
+.calculator form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 320px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  margin-top: 0.25rem;
+}
+
+button {
+  background: #0066cc;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.results {
+  margin-top: 1rem;
+}
+
+.results ul {
+  padding-left: 1.2rem;
+}
+
+.note {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.todo {
+  background: #fff3cd;
+  padding: 0 0.2em;
+}
+
+footer {
+  border-top: 1px solid #ddd;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+@media (min-width: 640px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
