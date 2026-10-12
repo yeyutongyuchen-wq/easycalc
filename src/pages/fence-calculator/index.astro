@@ -1,0 +1,427 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const title = "Fence Calculator – Posts, Panels, Rails, Pickets, Gates, Concrete & Cost";
+const description =
+  "Estimate fence posts, panels, rails, pickets, gates, concrete, spacing and cost for wood, vinyl, privacy and chain-link fences.";
+const canonical = "https://easycalc.io/fence-calculator/";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      name: "Fence Calculator",
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Any",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+      url: canonical,
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is a typical fence post spacing?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Most wood privacy fences use 8 ft spacing. 6 ft is used for heavier loads or high wind areas. 10 ft is sometimes used with lighter materials or additional bracing.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How many posts do I need for 100 ft of fence?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "At 8 ft spacing, 100 ft requires approximately 13 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How much does 100 ft of fence cost?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Cost varies widely by material, region, and labor. Material-only estimates range from roughly <span class='todo'>待填：价格区间</span> depending on wood, vinyl, or chain link. Always check local supplier pricing.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How deep should fence posts be buried?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A common rule is to bury one-third of the post length. In frost-prone areas the bottom of the post should extend below the local frost line. Check local building codes for exact requirements.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Do I need a permit for a fence?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Requirements vary by city and HOA. Many areas require permits for fences above a certain height or near property lines. Contact your local building department and call 811 before digging.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Which fence material lasts the longest?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Vinyl and aluminum generally require less maintenance and last longer than untreated wood. Treated wood and chain link have intermediate lifespans. Actual longevity depends on climate, installation quality, and maintenance.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
+  <!-- SEO: breadcrumb -->
+  <nav aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li>Fence Calculator</li>
+    </ol>
+  </nav>
+
+  <!-- SEO: single H1 -->
+  <h1>Fence Calculator for Posts, Panels, Spacing & Cost</h1>
+
+  <!-- Calculator: all labels are static HTML; logic is in script -->
+  <section class="calculator" id="fence-calc">
+    <h2>Fence Calculator</h2>
+    <p>Enter dimensions for an estimate of posts, rails, pickets or panels, concrete, and cost. Supports up to 5 segments for irregular layouts.</p>
+
+    <form id="fence-form">
+      <div>
+        <label>Total length (ft) — Segment 1
+          <input type="number" class="seg-length" min="0" step="0.1" value="100" />
+        </label>
+      </div>
+      <div>
+        <label>Segment 2 (optional)
+          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+        </label>
+      </div>
+      <div>
+        <label>Segment 3 (optional)
+          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+        </label>
+      </div>
+      <div>
+        <label>Segment 4 (optional)
+          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+        </label>
+      </div>
+      <div>
+        <label>Segment 5 (optional)
+          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+        </label>
+      </div>
+
+      <label>Height
+        <select id="height">
+          <option value="3">3 ft</option>
+          <option value="4">4 ft</option>
+          <option value="5">5 ft</option>
+          <option value="6" selected>6 ft</option>
+          <option value="8">8 ft</option>
+        </select>
+      </label>
+
+      <label>Material
+        <select id="material">
+          <option value="wood-privacy">Wood Privacy</option>
+          <option value="wood-picket">Wood Picket</option>
+          <option value="chain-link">Chain Link</option>
+          <option value="vinyl">Vinyl</option>
+          <option value="aluminum">Aluminum</option>
+          <option value="wrought-iron">Wrought Iron</option>
+        </select>
+      </label>
+
+      <label>Post spacing
+        <select id="spacing">
+          <option value="6">6 ft</option>
+          <option value="8" selected>8 ft</option>
+          <option value="10">10 ft</option>
+        </select>
+      </label>
+
+      <label>Number of gates
+        <input type="number" id="gates" min="0" value="0" />
+      </label>
+
+      <label>Gate width (ft)
+        <input type="number" id="gate-width" min="3" step="1" value="4" />
+      </label>
+
+      <label>Corners
+        <input type="number" id="corners" min="0" value="0" />
+      </label>
+
+      <label>Waste factor
+        <select id="waste">
+          <option value="0.05">5%</option>
+          <option value="0.10" selected>10%</option>
+          <option value="0.15">15%</option>
+        </select>
+      </label>
+
+      <label>
+        <input type="checkbox" id="metric" /> Use metric units
+      </label>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div id="results" class="results" hidden>
+      <h3>Net quantities</h3>
+      <ul>
+        <li>Posts: <span id="net-posts">—</span></li>
+        <li>Rails: <span id="net-rails">—</span></li>
+        <li>Pickets / panels: <span id="net-pickets">—</span></li>
+        <li>Gate hardware sets: <span id="net-hardware">—</span></li>
+      </ul>
+
+      <h3>With waste</h3>
+      <ul>
+        <li>Posts: <span id="waste-posts">—</span></li>
+        <li>Rails: <span id="waste-rails">—</span></li>
+        <li>Pickets / panels: <span id="waste-pickets">—</span></li>
+      </ul>
+
+      <h3>Shopping list (rounded)</h3>
+      <ul>
+        <li>Posts to buy: <span id="buy-posts">—</span></li>
+        <li>Rails to buy: <span id="buy-rails">—</span></li>
+        <li>Pickets / panels to buy: <span id="buy-pickets">—</span></li>
+        <li>Concrete bags (60 lb): <span id="buy-concrete">—</span></li>
+        <li>Screws / fasteners: <span id="buy-fasteners">—</span></li>
+      </ul>
+
+      <button type="button" id="copy-btn">Copy list as text</button>
+      <p class="note">Estimates only. Verify all quantities and prices with local suppliers. Concrete and spacing coefficients marked below require confirmation.</p>
+    </div>
+  </section>
+
+  <!-- SEO: explanatory content — all static HTML -->
+  <section>
+    <h2>How to Calculate Fence Materials</h2>
+    <h3>1. Calculate posts</h3>
+    <p>Divide total length by post spacing and round up to get the number of sections. Posts equal sections plus one, plus any extra posts required at corners or gates.</p>
+    <h3>2. Calculate rails</h3>
+    <p>Most wood and metal fences use two or three horizontal rails per section. Chain-link fences typically use a top rail plus bottom tension wire. Vinyl privacy fences commonly use two rails per section.</p>
+    <h3>3. Calculate pickets or panels</h3>
+    <p>For picket fences, divide the length of each section by (picket width + gap). Privacy and vinyl fences are often sold as full panels sized to the chosen spacing.</p>
+    <h3>4. Calculate concrete</h3>
+    <p>Each post sits in a hole. Hole volume is calculated from diameter and depth, then converted to the number of 60 lb bags. Many installers use one bag per post as a starting point; actual needs depend on hole size and soil.</p>
+  </section>
+
+  <section>
+    <h2>Fence Post Spacing and Depth</h2>
+    <p>6 ft spacing is used where wind loads are high or the fence is tall. 8 ft is the most common spacing for residential wood privacy fences. 10 ft spacing can be used with lighter materials if the posts and rails are strong enough. A frequent rule of thumb is to bury one-third of the post length. In areas with frost, the bottom of the post should extend below the local frost line. Local building departments publish the exact frost depth and any required embedment.</p>
+  </section>
+
+  <section>
+    <h2>Material List for a Typical Fence</h2>
+    <p>Example quantities for a 100 ft fence. All numbers are placeholders pending verification against common product sizes.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Posts</th>
+          <th>Rails</th>
+          <th>Pickets / panels</th>
+          <th>Concrete bags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Wood privacy</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+        <tr>
+          <td>Chain link</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+        <tr>
+          <td>Vinyl</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Fence Cost by Material</h2>
+    <p>Material-only cost ranges per linear foot. Labor, gates, and site conditions are excluded. All figures are placeholders.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Cost per ft</th>
+          <th>100 ft total</th>
+          <th>Typical lifespan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Wood privacy</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+        <tr>
+          <td>Chain link</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+        <tr>
+          <td>Vinyl</td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+          <td><span class="todo">待填</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Before You Dig: Permits, Property Lines and Utilities</h2>
+    <p>Call 811 before any excavation so underground utilities can be marked. Confirm property lines with a survey or existing records. Check with your local building department and homeowners association for height limits, setback requirements, and permit rules. Regulations differ by jurisdiction; do not rely on general guidance alone.</p>
+  </section>
+
+  <section>
+    <h2>FAQ</h2>
+    <h3>What is a typical fence post spacing?</h3>
+    <p>Most wood privacy fences use 8 ft spacing. 6 ft is used for heavier loads or high wind areas. 10 ft is sometimes used with lighter materials or additional bracing.</p>
+    <h3>How many posts do I need for 100 ft of fence?</h3>
+    <p>At 8 ft spacing, 100 ft requires approximately 13 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.</p>
+    <h3>How much does 100 ft of fence cost?</h3>
+    <p>Cost varies widely by material, region, and labor. Material-only estimates range from roughly <span class="todo">待填：价格区间</span> depending on wood, vinyl, or chain link. Always check local supplier pricing.</p>
+    <h3>How deep should fence posts be buried?</h3>
+    <p>A common rule is to bury one-third of the post length. In frost-prone areas the bottom of the post should extend below the local frost line. Check local building codes for exact requirements.</p>
+    <h3>Do I need a permit for a fence?</h3>
+    <p>Requirements vary by city and HOA. Many areas require permits for fences above a certain height or near property lines. Contact your local building department and call 811 before digging.</p>
+    <h3>Which fence material lasts the longest?</h3>
+    <p>Vinyl and aluminum generally require less maintenance and last longer than untreated wood. Treated wood and chain link have intermediate lifespans. Actual longevity depends on climate, installation quality, and maintenance.</p>
+  </section>
+
+  <section>
+    <h2>About this calculator</h2>
+    <p>Author: <span class="todo">待填：作者姓名与资质</span></p>
+    <p>Reviewed by: <span class="todo">待填：审核人</span></p>
+    <p>Last updated: <span class="todo">待填：日期</span></p>
+  </section>
+
+  <section>
+    <h2>Related calculators</h2>
+    <p><a href="/">All construction calculators</a></p>
+    <p>Fence post calculator</p>
+    <p>Chain link fence cost</p>
+  </section>
+</Base>
+
+<script>
+  // CONFIG: all coefficients in one place. Verify each value.
+  const CONFIG = {
+    // Post spacing options already in the form
+    railsPerSection: {
+      "wood-privacy": 3,   // TODO: confirm common rail count
+      "wood-picket": 2,
+      "chain-link": 1,     // top rail; bottom tension separate
+      "vinyl": 2,
+      "aluminum": 2,
+      "wrought-iron": 2,
+    },
+    picketWidthFt: 0.5,    // TODO: verify typical picket width
+    picketGapFt: 0.125,    // TODO: verify typical gap
+    concreteBagsPerPost60lb: 1, // TODO: verify against hole volume
+    // Cost per linear foot placeholders — TODO replace
+    costPerFt: {
+      "wood-privacy": 25,
+      "wood-picket": 20,
+      "chain-link": 15,
+      "vinyl": 30,
+      "aluminum": 35,
+      "wrought-iron": 40,
+    },
+  };
+
+  const form = document.getElementById("fence-form");
+  const results = document.getElementById("results");
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const lengths = Array.from(document.querySelectorAll(".seg-length"))
+      .map((el) => parseFloat(el.value) || 0)
+      .filter((n) => n > 0);
+
+    const totalLength = lengths.reduce((a, b) => a + b, 0);
+    if (totalLength <= 0) return;
+
+    const spacing = parseFloat(document.getElementById("spacing").value);
+    const material = document.getElementById("material").value;
+    const gates = parseInt(document.getElementById("gates").value, 10) || 0;
+    const waste = parseFloat(document.getElementById("waste").value);
+    const metric = document.getElementById("metric").checked;
+
+    const sections = Math.ceil(totalLength / spacing);
+    const posts = sections + 1 + gates; // simplified extra for gates
+    const railsPer = CONFIG.railsPerSection[material] || 2;
+    const rails = (sections - gates) * railsPer;
+    const pickets = Math.ceil((totalLength - gates * 4) / (CONFIG.picketWidthFt + CONFIG.picketGapFt));
+
+    const netPosts = posts;
+    const netRails = rails;
+    const netPickets = pickets;
+    const netHardware = gates;
+
+    const wastePosts = Math.ceil(netPosts * (1 + waste));
+    const wasteRails = Math.ceil(netRails * (1 + waste));
+    const wastePickets = Math.ceil(netPickets * (1 + waste));
+
+    const buyPosts = wastePosts;
+    const buyRails = wasteRails;
+    const buyPickets = wastePickets;
+    const buyConcrete = Math.ceil(posts * CONFIG.concreteBagsPerPost60lb);
+    const buyFasteners = Math.ceil(rails / 10); // placeholder
+
+    document.getElementById("net-posts").textContent = netPosts;
+    document.getElementById("net-rails").textContent = netRails;
+    document.getElementById("net-pickets").textContent = netPickets;
+    document.getElementById("net-hardware").textContent = netHardware;
+
+    document.getElementById("waste-posts").textContent = wastePosts;
+    document.getElementById("waste-rails").textContent = wasteRails;
+    document.getElementById("waste-pickets").textContent = wastePickets;
+
+    document.getElementById("buy-posts").textContent = buyPosts;
+    document.getElementById("buy-rails").textContent = buyRails;
+    document.getElementById("buy-pickets").textContent = buyPickets;
+    document.getElementById("buy-concrete").textContent = buyConcrete;
+    document.getElementById("buy-fasteners").textContent = buyFasteners;
+
+    results.hidden = false;
+  });
+
+  document.getElementById("copy-btn")?.addEventListener("click", () => {
+    const text = results.innerText;
+    navigator.clipboard.writeText(text).catch(() => {});
+  });
+</script>
