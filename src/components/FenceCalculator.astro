@@ -1,0 +1,95 @@
+---
+// Simplified fence calculator for homepage
+// All labels and explanatory text are static HTML
+// Calculation logic is in the <script> below
+---
+
+<section class="calculator" id="home-fence-calc">
+  <h2>Quick Fence Estimate</h2>
+  <p>Enter length, height, and material for an immediate materials and cost estimate.</p>
+
+  <form id="fence-form">
+    <label>
+      Fence length (ft)
+      <input type="number" id="length" min="1" step="0.1" value="100" required />
+    </label>
+
+    <label>
+      Height
+      <select id="height">
+        <option value="3">3 ft</option>
+        <option value="4">4 ft</option>
+        <option value="5">5 ft</option>
+        <option value="6" selected>6 ft</option>
+        <option value="8">8 ft</option>
+      </select>
+    </label>
+
+    <label>
+      Material
+      <select id="material">
+        <option value="wood-privacy">Wood Privacy</option>
+        <option value="wood-picket">Wood Picket</option>
+        <option value="chain-link">Chain Link</option>
+        <option value="vinyl">Vinyl</option>
+      </select>
+    </label>
+
+    <button type="submit">Calculate</button>
+  </form>
+
+  <div id="results" class="results" hidden>
+    <h3>Estimated materials</h3>
+    <ul>
+      <li>Posts: <span id="posts">—</span></li>
+      <li>Panels / pickets: <span id="panels">—</span></li>
+      <li>Concrete bags (60 lb): <span id="concrete">—</span></li>
+      <li>Estimated total cost: <span id="cost">—</span></li>
+    </ul>
+    <p class="note">Estimates only. Actual quantities and prices vary by region and supplier.</p>
+  </div>
+</section>
+
+<script>
+  // CONFIG: coefficients used by the simplified calculator
+  // Values marked TODO require verification against real product data
+  const CONFIG = {
+    postSpacingFt: 8, // default post spacing in feet
+    concreteBagsPerPost: 1, // placeholder: 60 lb bags per post — TODO verify
+    // Cost placeholders per linear foot by material — TODO replace with verified regional averages
+    costPerFt: {
+      "wood-privacy": 25,
+      "wood-picket": 20,
+      "chain-link": 15,
+      "vinyl": 30,
+    },
+  };
+
+  const form = document.getElementById("fence-form");
+  const results = document.getElementById("results");
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const length = parseFloat(document.getElementById("length").value) || 0;
+    const height = parseInt(document.getElementById("height").value, 10);
+    const material = document.getElementById("material").value;
+
+    if (length <= 0) return;
+
+    // Simple calculation for homepage
+    const sections = Math.ceil(length / CONFIG.postSpacingFt);
+    const posts = sections + 1;
+    const panels = sections; // simplified: 1 panel per section
+    const concrete = posts * CONFIG.concreteBagsPerPost;
+    const costPerFt = CONFIG.costPerFt[material] || 0;
+    const totalCost = Math.round(length * costPerFt);
+
+    document.getElementById("posts").textContent = posts;
+    document.getElementById("panels").textContent = panels;
+    document.getElementById("concrete").textContent = concrete;
+    document.getElementById("cost").textContent = totalCost > 0 ? `$${totalCost}` : "—";
+
+    results.hidden = false;
+  });
+</script>
