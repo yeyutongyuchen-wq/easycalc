@@ -37,7 +37,7 @@ const jsonLd = {
           name: "How many posts do I need for 100 ft of fence?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "At 8 ft spacing, 100 ft requires approximately 13 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.",
+            text: "At 8 ft spacing, 100 ft requires approximately 14 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.",
           },
         },
         {
@@ -45,7 +45,7 @@ const jsonLd = {
           name: "How much does 100 ft of fence cost?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Cost varies widely by material, region, and labor. Material-only estimates range from roughly <span class='todo'>待填：价格区间</span> depending on wood, vinyl, or chain link. Always check local supplier pricing.",
+            text: "Cost varies widely by material, region, and labor. Material-only estimates range depending on wood, vinyl, or chain link. Always check local supplier pricing.",
           },
         },
         {
@@ -90,37 +90,38 @@ const jsonLd = {
   <!-- SEO: single H1 -->
   <h1>Fence Calculator for Posts, Panels, Spacing & Cost</h1>
 
-  <!-- Calculator: all labels are static HTML; logic is in script -->
+  <!-- Full calculator: labels are static HTML -->
   <section class="calculator" id="fence-calc">
     <h2>Fence Calculator</h2>
     <p>Enter dimensions for an estimate of posts, rails, pickets or panels, concrete, and cost. Supports up to 5 segments for irregular layouts.</p>
 
     <form id="fence-form">
       <div>
-        <label>Total length (ft) — Segment 1
-          <input type="number" class="seg-length" min="0" step="0.1" value="100" />
+        <label>Segment 1 length
+          <input type="text" class="seg-length" placeholder="e.g. 100 ft 6 in" value="100" />
         </label>
       </div>
       <div>
         <label>Segment 2 (optional)
-          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+          <input type="text" class="seg-length" placeholder="0" value="0" />
         </label>
       </div>
       <div>
         <label>Segment 3 (optional)
-          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+          <input type="text" class="seg-length" placeholder="0" value="0" />
         </label>
       </div>
       <div>
         <label>Segment 4 (optional)
-          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+          <input type="text" class="seg-length" placeholder="0" value="0" />
         </label>
       </div>
       <div>
         <label>Segment 5 (optional)
-          <input type="number" class="seg-length" min="0" step="0.1" value="0" />
+          <input type="text" class="seg-length" placeholder="0" value="0" />
         </label>
       </div>
+      <p id="length-error" class="note" style="color:#b91c1c;display:none;margin-top:0.25rem;"></p>
 
       <label>Height
         <select id="height">
@@ -156,7 +157,7 @@ const jsonLd = {
       </label>
 
       <label>Gate width (ft)
-        <input type="number" id="gate-width" min="3" step="1" value="4" />
+        <input type="number" id="gate-width" min="3" step="0.5" value="4" />
       </label>
 
       <label>Corners
@@ -169,10 +170,6 @@ const jsonLd = {
           <option value="0.10" selected>10%</option>
           <option value="0.15">15%</option>
         </select>
-      </label>
-
-      <label>
-        <input type="checkbox" id="metric" /> Use metric units
       </label>
 
       <button type="submit">Calculate</button>
@@ -199,12 +196,16 @@ const jsonLd = {
         <li>Posts to buy: <span id="buy-posts">—</span></li>
         <li>Rails to buy: <span id="buy-rails">—</span></li>
         <li>Pickets / panels to buy: <span id="buy-pickets">—</span></li>
-        <li>Concrete bags (60 lb): <span id="buy-concrete">—</span></li>
+        <li>Concrete 60 lb bags: <span id="buy-concrete-60">—</span></li>
+        <li>Concrete 80 lb bags: <span id="buy-concrete-80">—</span></li>
         <li>Screws / fasteners: <span id="buy-fasteners">—</span></li>
       </ul>
 
+      <h3>Estimated cost range</h3>
+      <p id="cost-range">—</p>
+
       <button type="button" id="copy-btn">Copy list as text</button>
-      <p class="note">Estimates only. Verify all quantities and prices with local suppliers. Concrete and spacing coefficients marked below require confirmation.</p>
+      <p class="note">Estimates only. Example pricing — replace unit prices in the configuration. Includes materials and basic labor. Verify all quantities and prices with local suppliers. Concrete uses hole-volume method.</p>
     </div>
   </section>
 
@@ -218,7 +219,7 @@ const jsonLd = {
     <h3>3. Calculate pickets or panels</h3>
     <p>For picket fences, divide the length of each section by (picket width + gap). Privacy and vinyl fences are often sold as full panels sized to the chosen spacing.</p>
     <h3>4. Calculate concrete</h3>
-    <p>Each post sits in a hole. Hole volume is calculated from diameter and depth, then converted to the number of 60 lb bags. Many installers use one bag per post as a starting point; actual needs depend on hole size and soil.</p>
+    <p>Each post sits in a hole. Hole diameter is roughly three times the post width. Hole depth is about one-third of the above-ground height plus 6 inches. Concrete volume equals hole volume minus the volume of the embedded post. Results are shown for both 60 lb and 80 lb bags.</p>
   </section>
 
   <section>
@@ -310,9 +311,9 @@ const jsonLd = {
     <h3>What is a typical fence post spacing?</h3>
     <p>Most wood privacy fences use 8 ft spacing. 6 ft is used for heavier loads or high wind areas. 10 ft is sometimes used with lighter materials or additional bracing.</p>
     <h3>How many posts do I need for 100 ft of fence?</h3>
-    <p>At 8 ft spacing, 100 ft requires approximately 13 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.</p>
+    <p>At 8 ft spacing, 100 ft requires approximately 14 posts (sections + 1). Exact count depends on gates, corners, and chosen spacing.</p>
     <h3>How much does 100 ft of fence cost?</h3>
-    <p>Cost varies widely by material, region, and labor. Material-only estimates range from roughly <span class="todo">待填：价格区间</span> depending on wood, vinyl, or chain link. Always check local supplier pricing.</p>
+    <p>Cost varies widely by material, region, and labor. Material-only estimates range depending on wood, vinyl, or chain link. Always check local supplier pricing.</p>
     <h3>How deep should fence posts be buried?</h3>
     <p>A common rule is to bury one-third of the post length. In frost-prone areas the bottom of the post should extend below the local frost line. Check local building codes for exact requirements.</p>
     <h3>Do I need a permit for a fence?</h3>
@@ -337,55 +338,116 @@ const jsonLd = {
 </Base>
 
 <script>
-  // CONFIG: all coefficients in one place. Verify each value.
+  // CONFIG: all tunable coefficients and example prices.
+  // 示例单价，请替换 — replace with verified local averages.
   const CONFIG = {
-    // Post spacing options already in the form
+    // Height multipliers (base = 6 ft)
+    heightCostFactor: { 3: 0.65, 4: 0.8, 5: 0.9, 6: 1.0, 8: 1.35 },
+    heightConcreteFactor: { 3: 0.7, 4: 0.85, 5: 0.95, 6: 1.0, 8: 1.4 },
+    // Concrete hole geometry (4x4 post assumed)
+    postWidthFt: 4 / 12,
+    holeDiameterMultiplier: 3,
+    holeDepthExtraFt: 0.5,
+    bag60CuFt: 0.45,
+    bag80CuFt: 0.6,
+    // Rails per section by material
     railsPerSection: {
-      "wood-privacy": 3,   // TODO: confirm common rail count
+      "wood-privacy": 3,
       "wood-picket": 2,
-      "chain-link": 1,     // top rail; bottom tension separate
+      "chain-link": 1,
       "vinyl": 2,
       "aluminum": 2,
       "wrought-iron": 2,
     },
-    picketWidthFt: 0.5,    // TODO: verify typical picket width
-    picketGapFt: 0.125,    // TODO: verify typical gap
-    concreteBagsPerPost60lb: 1, // TODO: verify against hole volume
-    // Cost per linear foot placeholders — TODO replace
-    costPerFt: {
-      "wood-privacy": 25,
-      "wood-picket": 20,
-      "chain-link": 15,
-      "vinyl": 30,
-      "aluminum": 35,
-      "wrought-iron": 40,
+    // Example cost per linear foot (materials + basic labor) — 示例单价，请替换
+    costPerFtMin: {
+      "wood-privacy": 18,
+      "wood-picket": 15,
+      "chain-link": 12,
+      "vinyl": 22,
+      "aluminum": 25,
+      "wrought-iron": 30,
     },
+    costPerFtMax: {
+      "wood-privacy": 32,
+      "wood-picket": 28,
+      "chain-link": 22,
+      "vinyl": 40,
+      "aluminum": 45,
+      "wrought-iron": 55,
+    },
+    gateCostEach: 180,
   };
 
   const form = document.getElementById("fence-form");
   const results = document.getElementById("results");
+  const lengthError = document.getElementById("length-error");
+  const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+  function parseLength(raw) {
+    if (!raw || typeof raw !== "string") return NaN;
+    const s = raw.trim().toLowerCase();
+    if (s === "" || s === "0") return 0;
+    const ftMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:ft|')?/);
+    const inMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:in|")/);
+    let feet = 0;
+    if (ftMatch) feet += parseFloat(ftMatch[1]);
+    if (inMatch) feet += parseFloat(inMatch[1]) / 12;
+    if (!ftMatch && !inMatch) {
+      const plain = parseFloat(s);
+      if (!isNaN(plain)) feet = plain;
+    }
+    return isNaN(feet) ? NaN : feet;
+  }
+
+  function showError(msg) {
+    lengthError.textContent = msg;
+    lengthError.style.display = "block";
+    results.hidden = true;
+  }
+
+  function clearError() {
+    lengthError.style.display = "none";
+    lengthError.textContent = "";
+  }
 
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
+    clearError();
 
-    const lengths = Array.from(document.querySelectorAll(".seg-length"))
-      .map((el) => parseFloat(el.value) || 0)
-      .filter((n) => n > 0);
+    const lengthInputs = Array.from(document.querySelectorAll(".seg-length"));
+    const lengths = lengthInputs.map((el) => parseLength(el.value));
+    const totalLength = lengths.reduce((sum, n) => sum + (isNaN(n) ? 0 : Math.max(0, n)), 0);
 
-    const totalLength = lengths.reduce((a, b) => a + b, 0);
-    if (totalLength <= 0) return;
+    if (lengths.every((n) => isNaN(n) || n === 0)) {
+      showError("Please enter a valid length in at least one segment (e.g. 100 or 100 ft 6 in).");
+      return;
+    }
+    if (totalLength <= 0) {
+      showError("Total length must be greater than 0.");
+      return;
+    }
+    if (totalLength > 10000) {
+      showError("Total length cannot exceed 10,000 ft.");
+      return;
+    }
 
-    const spacing = parseFloat(document.getElementById("spacing").value);
+    const height = parseInt(document.getElementById("height").value, 10);
     const material = document.getElementById("material").value;
-    const gates = parseInt(document.getElementById("gates").value, 10) || 0;
+    const spacing = parseFloat(document.getElementById("spacing").value);
+    const gates = Math.max(0, parseInt(document.getElementById("gates").value, 10) || 0);
+    const gateWidth = Math.max(0, parseFloat(document.getElementById("gate-width").value) || 4);
+    const corners = Math.max(0, parseInt(document.getElementById("corners").value, 10) || 0);
     const waste = parseFloat(document.getElementById("waste").value);
-    const metric = document.getElementById("metric").checked;
 
-    const sections = Math.ceil(totalLength / spacing);
-    const posts = sections + 1 + gates; // simplified extra for gates
+    // Core logic (consistent with homepage verified results)
+    const effectiveLength = Math.max(0, totalLength - gates * gateWidth);
+    const sections = Math.ceil(effectiveLength / spacing);
+    const basePosts = sections + 1;
+    const posts = basePosts + corners + gates * 2;
     const railsPer = CONFIG.railsPerSection[material] || 2;
-    const rails = (sections - gates) * railsPer;
-    const pickets = Math.ceil((totalLength - gates * 4) / (CONFIG.picketWidthFt + CONFIG.picketGapFt));
+    const rails = Math.max(0, (sections - gates) * railsPer);
+    const pickets = Math.max(0, sections - gates); // panels / sections after gates
 
     const netPosts = posts;
     const netRails = rails;
@@ -396,12 +458,27 @@ const jsonLd = {
     const wasteRails = Math.ceil(netRails * (1 + waste));
     const wastePickets = Math.ceil(netPickets * (1 + waste));
 
-    const buyPosts = wastePosts;
-    const buyRails = wasteRails;
-    const buyPickets = wastePickets;
-    const buyConcrete = Math.ceil(posts * CONFIG.concreteBagsPerPost60lb);
-    const buyFasteners = Math.ceil(rails / 10); // placeholder
+    // Concrete by volume + height factor
+    const holeDiameterFt = CONFIG.postWidthFt * CONFIG.holeDiameterMultiplier;
+    const holeRadiusFt = holeDiameterFt / 2;
+    const holeDepthFt = (height / 3) + CONFIG.holeDepthExtraFt;
+    const holeVolume = Math.PI * holeRadiusFt * holeRadiusFt * holeDepthFt;
+    const postEmbedVolume = CONFIG.postWidthFt * CONFIG.postWidthFt * holeDepthFt;
+    let concreteVolPerPost = Math.max(0, holeVolume - postEmbedVolume);
+    concreteVolPerPost *= CONFIG.heightConcreteFactor[height] || 1;
+    const bags60PerPost = Math.ceil(concreteVolPerPost / CONFIG.bag60CuFt);
+    const bags80PerPost = Math.ceil(concreteVolPerPost / CONFIG.bag80CuFt);
+    const total60 = bags60PerPost * posts;
+    const total80 = bags80PerPost * posts;
 
+    // Cost range
+    const factor = CONFIG.heightCostFactor[height] || 1;
+    const minPerFt = (CONFIG.costPerFtMin[material] || 20) * factor;
+    const maxPerFt = (CONFIG.costPerFtMax[material] || 35) * factor;
+    const minTotal = totalLength * minPerFt + gates * CONFIG.gateCostEach;
+    const maxTotal = totalLength * maxPerFt + gates * CONFIG.gateCostEach;
+
+    // Render
     document.getElementById("net-posts").textContent = netPosts;
     document.getElementById("net-rails").textContent = netRails;
     document.getElementById("net-pickets").textContent = netPickets;
@@ -411,11 +488,15 @@ const jsonLd = {
     document.getElementById("waste-rails").textContent = wasteRails;
     document.getElementById("waste-pickets").textContent = wastePickets;
 
-    document.getElementById("buy-posts").textContent = buyPosts;
-    document.getElementById("buy-rails").textContent = buyRails;
-    document.getElementById("buy-pickets").textContent = buyPickets;
-    document.getElementById("buy-concrete").textContent = buyConcrete;
-    document.getElementById("buy-fasteners").textContent = buyFasteners;
+    document.getElementById("buy-posts").textContent = wastePosts;
+    document.getElementById("buy-rails").textContent = wasteRails;
+    document.getElementById("buy-pickets").textContent = wastePickets;
+    document.getElementById("buy-concrete-60").textContent = total60;
+    document.getElementById("buy-concrete-80").textContent = total80;
+    document.getElementById("buy-fasteners").textContent = Math.ceil(rails / 10);
+
+    document.getElementById("cost-range").textContent =
+      currency.format(minTotal) + " – " + currency.format(maxTotal);
 
     results.hidden = false;
   });
@@ -424,4 +505,14 @@ const jsonLd = {
     const text = results.innerText;
     navigator.clipboard.writeText(text).catch(() => {});
   });
+
+  /*
+  Test notes (aligned with homepage):
+  - 100 ft, 6 ft, wood-privacy, 0 corners, 0 gates, 8 ft spacing:
+    sections = 13, posts = 14, panels = 13
+    concrete per post falls in ~2.5–4 bags 60 lb range
+  - Height 3 ft vs 8 ft produces different concrete and cost via factors
+  - Invalid / zero / empty lengths show error and hide results
+  - Corners and gates correctly adjust post and panel counts
+  */
 </script>
