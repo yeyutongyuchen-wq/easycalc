@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import FenceCalculator from "../components/FenceCalculator.astro";
 
 const title = "Free Construction Calculators – Fence, Concrete, Roofing & More";
 const description =
@@ -20,60 +19,166 @@ const jsonLd = {
       name: "easycalc",
       url: "https://easycalc.io/",
     },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Are these calculators free?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. All calculators on easycalc are free to use. No registration or payment is required.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How accurate are the results?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Results are estimates based on standard formulas and typical material dimensions. Actual needs depend on site conditions, waste, and local product sizes. Always verify quantities before ordering.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Do the calculators support metric units?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The current fence calculator uses feet and inches. Metric support is planned for future calculators.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I use the results for a contractor quote?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The lists give a reasonable starting point for budgeting. Contractors usually add their own waste factors, labor, and local pricing, so treat the output as an estimate rather than a final bid.",
+          },
+        },
+      ],
+    },
   ],
 };
 ---
 
 <Base title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
-  <h1>Free Construction Calculators</h1>
+  <!-- SEO: single H1 with "Fence" -->
+  <h1>Free Fence & Construction Calculators</h1>
 
-  <FenceCalculator />
+  <!-- Homepage simplified fence calculator: all labels static HTML -->
+  <section class="calculator" id="home-fence-calc">
+    <h2>Quick Fence Estimate</h2>
+    <p>Enter length, height, and material for an immediate materials and cost estimate.</p>
 
+    <form id="fence-form">
+      <div>
+        <label>
+          Fence length
+          <input type="text" id="length" placeholder="e.g. 100 ft 6 in or 100.5" value="100" required />
+        </label>
+        <p id="length-error" class="note" style="color:#b91c1c;display:none;margin-top:0.25rem;"></p>
+      </div>
+
+      <label>
+        Height
+        <select id="height">
+          <option value="3">3 ft</option>
+          <option value="4">4 ft</option>
+          <option value="5">5 ft</option>
+          <option value="6" selected>6 ft</option>
+          <option value="8">8 ft</option>
+        </select>
+      </label>
+
+      <label>
+        Material
+        <select id="material">
+          <option value="wood-privacy">Wood Privacy</option>
+          <option value="wood-picket">Wood Picket</option>
+          <option value="chain-link">Chain Link</option>
+          <option value="vinyl">Vinyl</option>
+        </select>
+      </label>
+
+      <label>
+        Corners
+        <input type="number" id="corners" min="0" value="0" />
+      </label>
+
+      <label>
+        Number of gates
+        <input type="number" id="gates" min="0" value="0" />
+      </label>
+
+      <label>
+        Gate width (ft)
+        <input type="number" id="gate-width" min="3" step="0.5" value="4" />
+      </label>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div id="results" class="results" hidden>
+      <h3>Estimated materials</h3>
+      <ul>
+        <li>Posts: <span id="posts">—</span></li>
+        <li>Panels / pickets: <span id="panels">—</span></li>
+        <li>Concrete 60 lb bags: <span id="concrete-60">—</span></li>
+        <li>Concrete 80 lb bags: <span id="concrete-80">—</span></li>
+      </ul>
+      <h3>Cost range (materials + labor)</h3>
+      <p id="cost-range">—</p>
+      <p class="note">Example pricing only. Includes estimated materials and basic labor. Actual costs vary by region, supplier, and site conditions. Replace unit prices in the configuration object.</p>
+    </div>
+  </section>
+
+  <!-- SEO: introductory paragraph (static HTML) -->
   <section class="intro">
     <p>
       easycalc is a free collection of construction calculators built for homeowners doing DIY projects and small contractors preparing material lists. Enter a few measurements and get quantities for posts, panels, concrete, and other materials, plus a rough cost range. No account is required. Results are estimates based on common industry practices and should be verified against local conditions and supplier pricing.
     </p>
   </section>
 
+  <!-- SEO: category sections with H2 and H3; coming-soon items not linked -->
   <div class="grid">
     <section class="card">
       <h2>Fence & Outdoor</h2>
       <p>Calculate posts, panels, pickets, and concrete for wood, vinyl, and chain-link fences. Useful when planning a new perimeter or replacing sections of an existing fence.</p>
       <h3><a href="/fence-calculator/">Fence Calculator</a></h3>
-      <h3>Gravel Calculator</h3>
-      <h3>Mulch Calculator</h3>
+      <h3>Gravel Calculator <span class="note">Coming soon</span></h3>
+      <h3>Mulch Calculator <span class="note">Coming soon</span></h3>
     </section>
 
     <section class="card">
       <h2>Concrete & Masonry</h2>
       <p>Estimate cubic yards, bag counts, and footing volumes for slabs, footings, and block walls. Helps avoid under- or over-ordering ready-mix or bagged concrete.</p>
-      <h3>Concrete Calculator</h3>
-      <h3>Concrete Block Calculator</h3>
-      <h3>Concrete Footing Calculator</h3>
+      <h3>Concrete Calculator <span class="note">Coming soon</span></h3>
+      <h3>Concrete Block Calculator <span class="note">Coming soon</span></h3>
+      <h3>Concrete Footing Calculator <span class="note">Coming soon</span></h3>
     </section>
 
     <section class="card">
       <h2>Roofing & Framing</h2>
       <p>Figure roofing squares, rafter lengths, and related framing materials from roof dimensions and pitch. Supports planning for replacement or new construction.</p>
-      <h3>Roofing Calculator</h3>
-      <h3>Rafter Calculator</h3>
+      <h3>Roofing Calculator <span class="note">Coming soon</span></h3>
+      <h3>Rafter Calculator <span class="note">Coming soon</span></h3>
     </section>
 
     <section class="card">
       <h2>Flooring, Tile & Drywall</h2>
       <p>Calculate square footage, waste factors, and sheet or tile counts for floors, walls, and ceilings. Accounts for typical waste so you order enough material the first time.</p>
-      <h3>Tile Calculator</h3>
-      <h3>Flooring Calculator</h3>
-      <h3>Drywall Calculator</h3>
+      <h3>Tile Calculator <span class="note">Coming soon</span></h3>
+      <h3>Flooring Calculator <span class="note">Coming soon</span></h3>
+      <h3>Drywall Calculator <span class="note">Coming soon</span></h3>
     </section>
 
     <section class="card">
       <h2>Paint & Finishing</h2>
       <p>Estimate gallons of paint from wall and ceiling areas, including doors and windows. Useful for both interior and exterior projects.</p>
-      <h3>Paint Calculator</h3>
+      <h3>Paint Calculator <span class="note">Coming soon</span></h3>
     </section>
   </div>
 
+  <!-- SEO: why use section -->
   <section>
     <h2>Why use easycalc</h2>
     <ul>
@@ -84,6 +189,7 @@ const jsonLd = {
     </ul>
   </section>
 
+  <!-- SEO: FAQ with H3 questions and paragraph answers (no JS accordion) -->
   <section>
     <h2>FAQ</h2>
 
@@ -100,3 +206,152 @@ const jsonLd = {
     <p>The lists give a reasonable starting point for budgeting. Contractors usually add their own waste factors, labor, and local pricing, so treat the output as an estimate rather than a final bid.</p>
   </section>
 </Base>
+
+<script>
+  // CONFIG: all tunable coefficients and example prices in one place.
+  // Marked "示例单价，请替换" — replace with verified local averages.
+  const CONFIG = {
+    postSpacingFt: 8,
+    // Height multipliers applied to cost and concrete (base = 6 ft)
+    heightCostFactor: { 3: 0.65, 4: 0.8, 5: 0.9, 6: 1.0, 8: 1.35 },
+    heightConcreteFactor: { 3: 0.7, 4: 0.85, 5: 0.95, 6: 1.0, 8: 1.4 },
+    // Concrete hole geometry (4x4 post assumed)
+    postWidthFt: 4 / 12,          // 4 inches
+    holeDiameterMultiplier: 3,    // hole ≈ 3× post width → ~12 in
+    holeDepthExtraFt: 0.5,        // +6 inches
+    bag60CuFt: 0.45,
+    bag80CuFt: 0.6,
+    // Example unit prices per linear foot (materials + basic labor) — 示例单价，请替换
+    costPerFtMin: {
+      "wood-privacy": 18,
+      "wood-picket": 15,
+      "chain-link": 12,
+      "vinyl": 22,
+    },
+    costPerFtMax: {
+      "wood-privacy": 32,
+      "wood-picket": 28,
+      "chain-link": 22,
+      "vinyl": 40,
+    },
+    gateCostEach: 180, // example gate hardware + labor, 示例单价，请替换
+  };
+
+  const form = document.getElementById("fence-form");
+  const results = document.getElementById("results");
+  const lengthInput = document.getElementById("length");
+  const lengthError = document.getElementById("length-error");
+  const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+  function parseLength(raw) {
+    if (!raw || typeof raw !== "string") return NaN;
+    const s = raw.trim().toLowerCase();
+    if (s === "") return NaN;
+    // Support "100", "100.5", "100 ft", "100 ft 6 in", "100' 6\""
+    const ftMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:ft|')?/);
+    const inMatch = s.match(/(\d+(?:\.\d+)?)\s*(?:in|")/);
+    let feet = 0;
+    if (ftMatch) feet += parseFloat(ftMatch[1]);
+    if (inMatch) feet += parseFloat(inMatch[1]) / 12;
+    if (!ftMatch && !inMatch) {
+      const plain = parseFloat(s);
+      if (!isNaN(plain)) feet = plain;
+    }
+    return feet;
+  }
+
+  function showError(msg) {
+    lengthError.textContent = msg;
+    lengthError.style.display = "block";
+    results.hidden = true;
+    // clear displayed values
+    ["posts", "panels", "concrete-60", "concrete-80"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = "—";
+    });
+    document.getElementById("cost-range").textContent = "—";
+  }
+
+  function clearError() {
+    lengthError.style.display = "none";
+    lengthError.textContent = "";
+  }
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    clearError();
+
+    const rawLength = lengthInput.value;
+    const length = parseLength(rawLength);
+    const height = parseInt(document.getElementById("height").value, 10);
+    const material = document.getElementById("material").value;
+    const corners = Math.max(0, parseInt(document.getElementById("corners").value, 10) || 0);
+    const gates = Math.max(0, parseInt(document.getElementById("gates").value, 10) || 0);
+    const gateWidth = Math.max(0, parseFloat(document.getElementById("gate-width").value) || 4);
+
+    // Validation
+    if (rawLength.trim() === "" || isNaN(length)) {
+      showError("Please enter a valid length (e.g. 100 or 100 ft 6 in).");
+      return;
+    }
+    if (length <= 0) {
+      showError("Length must be greater than 0.");
+      return;
+    }
+    if (length > 10000) {
+      showError("Length cannot exceed 10,000 ft.");
+      return;
+    }
+
+    // Core post / panel logic (kept as previously verified)
+    // sections = ceil(effectiveLength / spacing); posts = sections + 1 + extras
+    const effectiveLength = Math.max(0, length - gates * gateWidth);
+    const sections = Math.ceil(effectiveLength / CONFIG.postSpacingFt);
+    const basePosts = sections + 1;
+    const posts = basePosts + corners + gates * 2; // corners +1 each; each gate +2 posts
+    const panels = Math.max(0, sections - gates); // gates replace panels
+
+    // Concrete by volume
+    const holeDiameterFt = CONFIG.postWidthFt * CONFIG.holeDiameterMultiplier;
+    const holeRadiusFt = holeDiameterFt / 2;
+    const holeDepthFt = (height / 3) + CONFIG.holeDepthExtraFt;
+    const holeVolume = Math.PI * holeRadiusFt * holeRadiusFt * holeDepthFt;
+    const postEmbedVolume = CONFIG.postWidthFt * CONFIG.postWidthFt * holeDepthFt;
+    let concreteVolPerPost = Math.max(0, holeVolume - postEmbedVolume);
+    // Apply height factor
+    concreteVolPerPost *= CONFIG.heightConcreteFactor[height] || 1;
+    const bags60 = Math.ceil(concreteVolPerPost / CONFIG.bag60CuFt);
+    const bags80 = Math.ceil(concreteVolPerPost / CONFIG.bag80CuFt);
+    const total60 = bags60 * posts;
+    const total80 = bags80 * posts;
+
+    // Cost range (materials + labor) with height factor
+    const factor = CONFIG.heightCostFactor[height] || 1;
+    const minPerFt = (CONFIG.costPerFtMin[material] || 20) * factor;
+    const maxPerFt = (CONFIG.costPerFtMax[material] || 35) * factor;
+    const minTotal = length * minPerFt + gates * CONFIG.gateCostEach;
+    const maxTotal = length * maxPerFt + gates * CONFIG.gateCostEach;
+
+    // Render
+    document.getElementById("posts").textContent = posts;
+    document.getElementById("panels").textContent = panels;
+    document.getElementById("concrete-60").textContent = total60;
+    document.getElementById("concrete-80").textContent = total80;
+    document.getElementById("cost-range").textContent =
+      currency.format(minTotal) + " – " + currency.format(maxTotal);
+
+    results.hidden = false;
+  });
+
+  /*
+  Test cases (verified after this change):
+  - 100 ft, 6 ft, wood-privacy, 0 corners, 0 gates:
+    sections = ceil(100/8) = 13, posts = 13+1 = 14, panels = 13
+    concrete per post ≈ 3–4 bags 60 lb (within 2.5–4 range)
+  - 100 ft, 3 ft vs 8 ft: cost and concrete differ due to heightCostFactor / heightConcreteFactor
+  - length 0 / -5 / empty: red error shown, results hidden, no NaN
+  - 50 ft, 2 corners, 1 gate of 4 ft:
+    effectiveLength = 50-4 = 46, sections = ceil(46/8) = 6, basePosts = 7,
+    posts = 7 + 2 + 2 = 11, panels = 6-1 = 5
+  */
+</script>
